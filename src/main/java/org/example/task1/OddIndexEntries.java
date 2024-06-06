@@ -7,22 +7,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class FilterOddEntries {
-    public static List<String> filterEntriesAtOddIndicesToList(List<String> list) {
+public class OddIndexEntries {
+    public static List<String> collectEntriesToList(List<String> list) {
         return IntStream.range(0, list.size())
                 .filter(i -> i % 2 != 0)
                 .mapToObj(list::get)
                 .collect(Collectors.toList());
     }
 
-    public static String filterEntriesAtOddIndicesToString(List<String> list) {
+    public static String collectEntriesToString(List<String> list) {
         return IntStream.range(0, list.size())
                 .filter(i -> i % 2 != 0)
                 .mapToObj(list::get)
                 .collect(Collectors.joining(", "));
     }
 
-    public static <T> List<T> genericFilterAtOddIndices(Collection<T> collection) {
+    public static <T> List<T> collectGenericEntries(Collection<T> collection) {
         List<T> list;
         if (collection instanceof List) list = (List<T>) collection;
         else list = collection.stream().collect(Collectors.toList());
@@ -32,7 +32,7 @@ public class FilterOddEntries {
                 .collect(Collectors.toList());
     }
 
-    public static Map<Integer, String> filterMapByOddKey(Map<Integer, String> map) {
+    public static Map<Integer, String> collectEntriesFromMap(Map<Integer, String> map) {
         if (map == null) {
             return Collections.emptyMap();
         }

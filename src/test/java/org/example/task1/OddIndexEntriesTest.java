@@ -6,54 +6,56 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FilterEntriesAtOddIndexTest {
+class OddIndexEntriesTest {
 
     @Test
-    void testFilterEntriesAtOddIndicesToList() {
+    void testCollectEntriesToList() {
         List<String> list = Arrays.asList("0 - Alice", "1 - Bob", "2 - Charlie", "3 - David", "4 - Eve", "5 - Frank", "6 - Grace");
         List<String> expected = Arrays.asList("1 - Bob", "3 - David", "5 - Frank");
 
-        List<String> listOfEntriesAtOddIndices = FilterOddEntries.filterEntriesAtOddIndicesToList(list);
+        List<String> listOfEntriesAtOddIndices = OddIndexEntries.collectEntriesToList(list);
         System.out.println("listOfEntriesAtOddIndices = " + listOfEntriesAtOddIndices);
+        System.out.println("expected = " + expected);
 
         assertEquals(expected, listOfEntriesAtOddIndices);
     }
 
     @Test
-    void testFilterEntriesAtOddIndicesToListNoEntries() {
+    void testCollectEntriesToList_ReturnsEmptyIfOne() {
         List<String> list = List.of("0 - Alice");
 
-        List<String> listOfEntriesAtOddIndices = FilterOddEntries.filterEntriesAtOddIndicesToList(list);
-        System.out.println("listOfEntriesAtOddIndices = " + listOfEntriesAtOddIndices);
+        List<String> emptyList = OddIndexEntries.collectEntriesToList(list);
+        System.out.println("emptyList = " + emptyList);
 
-        assertEquals(Collections.emptyList(), listOfEntriesAtOddIndices);
-        assertTrue(listOfEntriesAtOddIndices.size() == 0);
+        assertEquals(Collections.emptyList(), emptyList);
+        assertTrue(emptyList.size() == 0);
     }
 
     @Test
-    void testFilterEntriesAtOddIndicesToString() {
+    void testCollectEntriesToString() {
         List<String> list = Arrays.asList("0 - Alice", "1 - Bob", "2- Charlie", "3 - David", "4 - Eve", "5 - Frank", "6 - Grace");
         String expected = ("1 - Bob, 3 - David, 5 - Frank");
 
-        String stringOfEntriesAtOddIndices = FilterOddEntries.filterEntriesAtOddIndicesToString(list);
+        String stringOfEntriesAtOddIndices = OddIndexEntries.collectEntriesToString(list);
         System.out.println("stringOfEntriesAtOddIndices = " + stringOfEntriesAtOddIndices);
+        System.out.println("expected = " + expected);
 
         assertEquals(expected, stringOfEntriesAtOddIndices);
     }
 
     @Test
-    void testFilterEntriesAtOddIndicesToStringNoEntries() {
+    void testCollectEntriesToString_ReturnsEmptyIfOne() {
         List<String> list = Arrays.asList("0 - Alice");
         String expected = ("");
 
-        String stringOfEntriesAtOddIndices = FilterOddEntries.filterEntriesAtOddIndicesToString(list);
+        String stringOfEntriesAtOddIndices = OddIndexEntries.collectEntriesToString(list);
 
         assertEquals(expected, stringOfEntriesAtOddIndices);
         assertTrue(stringOfEntriesAtOddIndices.length() == 0);
     }
 
     @Test
-    void testGenericFilterAtOddIndices(){
+    void testCollectGenericEntries() {
         User alice = new User(0, "Alice");
         User bob = new User(1, "Bob");
         User charlie = new User(2, "Charlie");
@@ -64,7 +66,7 @@ class FilterEntriesAtOddIndexTest {
         List<User> userList = Arrays.asList(alice, bob, charlie, david, eve, frank);
         List<User> expected = Arrays.asList(bob, david, frank);
 
-        List<User> result = FilterOddEntries.genericFilterAtOddIndices(userList);
+        List<User> result = OddIndexEntries.collectGenericEntries(userList);
 
         System.out.println("userList = " + userList);
         System.out.println("result = " + result);
@@ -76,12 +78,12 @@ class FilterEntriesAtOddIndexTest {
     }
 
     @Test
-    void testGenericFilterAtOddIndicesReturnsEmptyIfOne() {
-        User meow = new User(0, "meow");
+    void testCollectGenericEntries_ReturnsEmptyIfOne() {
+        User bob = new User(0, "Bob");
 
-        List<User> userList = Arrays.asList(meow);
+        List<User> userList = Arrays.asList(bob);
 
-        List<User> result = FilterOddEntries.genericFilterAtOddIndices(userList);
+        List<User> result = OddIndexEntries.collectGenericEntries(userList);
 
         List<User> empty = new ArrayList<>();
 
@@ -92,7 +94,7 @@ class FilterEntriesAtOddIndexTest {
     }
 
     @Test
-    void testFilterMapByOddKey(){
+    void testCollectEntriesFromMap() {
         Map<Integer, String> inputMap = new HashMap<>();
         inputMap.put(0, "Alice");
         inputMap.put(1, "Bob");
@@ -101,20 +103,23 @@ class FilterEntriesAtOddIndexTest {
         inputMap.put(4, "Eve");
         inputMap.put(5, "Frank");
 
-        Map<Integer, String> filteredMap = FilterOddEntries.filterMapByOddKey(inputMap);
+        Collection<String> expected = List.of("Bob", "David", "Frank");
 
-        System.out.println(filteredMap.values());
+        Map<Integer, String> result = OddIndexEntries.collectEntriesFromMap(inputMap);
 
-        assertEquals(false, filteredMap.containsValue("Alice"));
-        assertEquals(true, filteredMap.containsValue("Bob"));
-        assertEquals(false, filteredMap.containsValue("Charlie"));
-        assertEquals(true, filteredMap.containsValue("David"));
-        assertEquals(false, filteredMap.containsValue("Eve"));
-        assertEquals(true, filteredMap.containsValue("Frank"));
+        System.out.println("result = " + result.values());
+        System.out.println("expected = " + expected);
+
+        assertEquals(false, result.containsValue("Alice"));
+        assertEquals(true, result.containsValue("Bob"));
+        assertEquals(false, result.containsValue("Charlie"));
+        assertEquals(true, result.containsValue("David"));
+        assertEquals(false, result.containsValue("Eve"));
+        assertEquals(true, result.containsValue("Frank"));
     }
 
     @Test
-    public void testFilterByOddKey_withOnlyOddKeys() {
+    public void testCollectEntriesFromMap_withOnlyOddKeys() {
         Map<Integer, String> inputMap = new HashMap<>();
         inputMap.put(1, "Alice");
         inputMap.put(3, "Bob");
@@ -122,13 +127,13 @@ class FilterEntriesAtOddIndexTest {
 
         Map<Integer, String> expected = new HashMap<>(inputMap);
 
-        Map<Integer, String> result = FilterOddEntries.filterMapByOddKey(inputMap);
+        Map<Integer, String> result = OddIndexEntries.collectEntriesFromMap(inputMap);
 
         assertEquals(expected, result);
     }
 
     @Test
-    public void testFilterByOddKey_withOnlyEvenKeys() {
+    public void testCollectEntriesFromMap_withOnlyEvenKeys() {
         Map<Integer, String> inputMap = new HashMap<>();
         inputMap.put(0, "Alice");
         inputMap.put(2, "Bob");
@@ -136,24 +141,24 @@ class FilterEntriesAtOddIndexTest {
 
         Map<Integer, String> expected = Collections.emptyMap();
 
-        Map<Integer, String> result = FilterOddEntries.filterMapByOddKey(inputMap);
+        Map<Integer, String> result = OddIndexEntries.collectEntriesFromMap(inputMap);
 
         assertEquals(expected, result);
     }
 
     @Test
-    public void testFilterByOddKey_withEmptyMap() {
+    public void testCollectEntriesFromMap_withEmptyMap() {
         Map<Integer, String> inputMap = new HashMap<>();
 
         Map<Integer, String> expected = Collections.emptyMap();
 
-        Map<Integer, String> result = FilterOddEntries.filterMapByOddKey(inputMap);
+        Map<Integer, String> result = OddIndexEntries.collectEntriesFromMap(inputMap);
 
         assertEquals(expected, result);
     }
 
     @Test
-    public void testFilterByOddKey_withNullKey() {
+    public void testCollectEntriesFromMap_withNullKey() {
         Map<Integer, String> input = new HashMap<>();
         input.put(0, "Alice");
         input.put(null, "null key");
@@ -162,10 +167,10 @@ class FilterEntriesAtOddIndexTest {
         input.put(5, "Eve");
 
         Map<Integer, String> expected = new HashMap<>();
-        expected.put(1, "Charlie");
-        expected.put(3, "Eve");
+        expected.put(3, "Charlie");
+        expected.put(5, "Eve");
 
-        Map<Integer, String> result = FilterOddEntries.filterMapByOddKey(input);
+        Map<Integer, String> result = OddIndexEntries.collectEntriesFromMap(input);
 
         assertEquals(expected, result);
     }
