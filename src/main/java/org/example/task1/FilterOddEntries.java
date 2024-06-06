@@ -1,7 +1,9 @@
 package org.example.task1;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -28,5 +30,14 @@ public class FilterOddEntries {
                 .filter(i -> i % 2 != 0)
                 .mapToObj(list::get)
                 .collect(Collectors.toList());
+    }
+
+    public static Map<Integer, String> filterMapByOddKey(Map<Integer, String> map) {
+        if (map == null) {
+            return Collections.emptyMap();
+        }
+        return map.entrySet().stream()
+                .filter(entry -> entry.getKey() != null && entry.getKey() % 2 != 0)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
