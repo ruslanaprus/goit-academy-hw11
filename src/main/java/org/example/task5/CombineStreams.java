@@ -12,18 +12,20 @@ public class CombineStreams {
         Iterator<T> firstIterator = first.iterator();
         Iterator<U> secondIterator = second.iterator();
 
-        Spliterator<R> spliterator = Spliterators.spliteratorUnknownSize(
-                new Iterator<R>() {
-                    @Override
-                    public boolean hasNext() {
-                        return firstIterator.hasNext() && secondIterator.hasNext();
-                    }
+        Iterator<R> zippingIterator = new Iterator<R>() {
+            @Override
+            public boolean hasNext() {
+                return firstIterator.hasNext() && secondIterator.hasNext();
+            }
 
-                    @Override
-                    public R next() {
-                        return zipper.apply(firstIterator.next(), secondIterator.next());
-                    }
-                },
+            @Override
+            public R next() {
+                return zipper.apply(firstIterator.next(), secondIterator.next());
+            }
+        };
+
+        Spliterator<R> spliterator = Spliterators.spliteratorUnknownSize(
+                zippingIterator,
                 Spliterator.ORDERED
         );
 
