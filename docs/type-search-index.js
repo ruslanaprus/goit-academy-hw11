@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.example.task5","l":"CombineStreams"},{"p":"org.example.task4","l":"CongruentialGenerator"},{"p":"org.example.task2","l":"LineSorter"},{"p":"org.example","l":"Main"},{"p":"org.example.task3","l":"NumberSorter"},{"p":"org.example.task1","l":"OddIndexEntries"}];updateSearchResults();

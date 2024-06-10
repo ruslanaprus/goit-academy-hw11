@@ -39,7 +39,7 @@ class CongruentialGeneratorTest {
 
     @Test
     public void testGenerateRandomStream_FirstTenNumbers() {
-        Stream<Long> randomStream = CongruentialGenerator.generateStream(seedSupplier, A, C, M);
+        Stream<Long> randomStream = CongruentialGenerator.generateStream(A, C, M, seedSupplier);
         long[] expectedNumbers = {
                 0L,
                 11L,
@@ -64,27 +64,27 @@ class CongruentialGeneratorTest {
     public void testGenerateRandomStream_ParameterValidation() {
         // Test for m <= 0
         assertThrows(IllegalArgumentException.class, () ->
-                CongruentialGenerator.generateStream(seedSupplier, A, C, -1L)
+                CongruentialGenerator.generateStream(A, C, -1L, seedSupplier)
         );
 
         // Test for a <= 0
         assertThrows(IllegalArgumentException.class, () ->
-                CongruentialGenerator.generateStream(seedSupplier, 0L, C, M)
+                CongruentialGenerator.generateStream(0L, C, M, seedSupplier)
         );
 
         // Test for a >= m
         assertThrows(IllegalArgumentException.class, () ->
-                CongruentialGenerator.generateStream(seedSupplier, M, C, M)
+                CongruentialGenerator.generateStream(M, C, M, seedSupplier)
         );
 
         // Test for c < 0
         assertThrows(IllegalArgumentException.class, () ->
-                CongruentialGenerator.generateStream(seedSupplier, A, -1L, M)
+                CongruentialGenerator.generateStream(A, -1L, M, seedSupplier)
         );
 
         // Test for c >= m
         assertThrows(IllegalArgumentException.class, () ->
-                CongruentialGenerator.generateStream(seedSupplier, A, M, M)
+                CongruentialGenerator.generateStream(A, M, M, seedSupplier)
         );
     }
 
