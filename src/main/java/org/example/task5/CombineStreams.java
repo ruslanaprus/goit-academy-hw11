@@ -31,7 +31,7 @@ public class CombineStreams {
         Iterator<T> firstIterator = first.iterator();
         Iterator<U> secondIterator = second.iterator();
 
-        Iterator<R> zippingIterator = new Iterator<R>() {
+        Iterable<R> iterable = () -> new Iterator<R>() {
             @Override
             public boolean hasNext() {
                 return firstIterator.hasNext() && secondIterator.hasNext();
@@ -43,11 +43,6 @@ public class CombineStreams {
             }
         };
 
-        Spliterator<R> spliterator = Spliterators.spliteratorUnknownSize(
-                zippingIterator,
-                Spliterator.ORDERED
-        );
-
-        return StreamSupport.stream(spliterator, false);
+        return StreamSupport.stream(iterable.spliterator(), false);
     }
 }
