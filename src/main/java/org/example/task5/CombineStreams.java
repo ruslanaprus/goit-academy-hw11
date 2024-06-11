@@ -3,10 +3,10 @@
  */
 package org.example.task5;
 
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -16,33 +16,32 @@ import java.util.stream.StreamSupport;
 public class CombineStreams {
 
     /**
-     * Zips two streams element-wise using the provided zipper function.
+     * Zips two streams into a single stream by alternating elements from both streams.
      *
-     * @param first The first stream to be zipped.
-     * @param second The second stream to be zipped.
-     * @param zipper The function that merges elements from the two streams into a single element.
-     * @param <T> The type of elements in the first stream.
-     * @param <U> The type of elements in the second stream.
-     * @param <R> The type of elements in the resulting stream after zipping.
-     * @return A stream consisting of elements resulting from applying the zipper function to corresponding elements from the two input streams.
-     * @throws NullPointerException if any of the parameters are null.
+     * <p>
+     * The resulting stream contains elements from the first stream and the second stream,
+     * in an alternating sequence. The resulting stream will only be as long as the shortest
+     * input stream.
+     * </p>
+     *
+     * @param <T>    the type of elements in the streams
+     * @param first  the first stream to be zipped
+     * @param second the second stream to be zipped
+     * @return a stream containing elements from the first and second stream, zipped together
+     * @throws NullPointerException if either of the streams is null
      */
-    public static <T, U, R> Stream<R> zip(Stream<T> first, Stream<U> second, BiFunction<T, U, R> zipper) {
-        Iterator<T> firstIterator = first.iterator();
-        Iterator<U> secondIterator = second.iterator();
 
-        Iterable<R> iterable = () -> new Iterator<R>() {
-            @Override
-            public boolean hasNext() {
-                return firstIterator.hasNext() && secondIterator.hasNext();
-            }
+    public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
+        Iterator<T> iterator1 = first.iterator();
+        Iterator<T> iterator2 = second.iterator();
 
-            @Override
-            public R next() {
-                return zipper.apply(firstIterator.next(), secondIterator.next());
-            }
-        };
+        Stream.Builder<T> builder = Stream.builder();
 
-        return StreamSupport.stream(iterable.spliterator(), false);
+        while (iterator1.hasNext() && iterator2.hasNext()) {
+            builder.accept(iterator1.next());
+            builder.accept(iterator2.next());
+        }
+
+        return builder.build();
     }
 }

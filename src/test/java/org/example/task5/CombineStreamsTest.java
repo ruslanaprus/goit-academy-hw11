@@ -1,66 +1,71 @@
+
 package org.example.task5;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CombineStreamsTest {
+    private <T> List<T> streamToList(Stream<T> stream) {
+        return stream.toList();
+    }
 
     @Test
-    void testZip_EmptyStreams() {
+    public void testZipBothStreamsEmpty() {
         Stream<Integer> first = Stream.empty();
-        Stream<String> second = Stream.empty();
-        Stream<String> result = CombineStreams.zip(first, second, (a, b) -> a + ", " + b);
-        assertEquals(0, result.count());
+        Stream<Integer> second = Stream.empty();
+
+        List<Integer> result = streamToList(CombineStreams.zip(first, second));
+
+        List<Integer> expected = Arrays.asList();
+        assertEquals(expected, result);
     }
 
     @Test
-    void testZip_StreamsWithDifferentLengths() {
+    public void testZipWithEqualLengthStreams() {
         Stream<Integer> first = Stream.of(1, 2, 3);
-        Stream<String> second = Stream.of("a", "b");
-        Stream<String> result = CombineStreams.zip(first, second, (a, b) -> a + ", " + b);
-        assertEquals(2, result.count());
+        Stream<Integer> second = Stream.of(4, 5, 6);
+
+        List<Integer> result = streamToList(CombineStreams.zip(first, second));
+
+        List<Integer> expected = Arrays.asList(1, 4, 2, 5, 3, 6);
+        assertEquals(expected, result);
     }
 
     @Test
-    void testZip_StreamsWithSameLengths() {
+    public void testZipFirstStreamShorter() {
+        Stream<Integer> first = Stream.of(1, 2);
+        Stream<Integer> second = Stream.of(4, 5, 6);
+
+        List<Integer> result = streamToList(CombineStreams.zip(first, second));
+
+        List<Integer> expected = Arrays.asList(1, 4, 2, 5);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testZipSecondStreamShorter() {
         Stream<Integer> first = Stream.of(1, 2, 3);
-        Stream<String> second = Stream.of("a", "b", "c");
-        Stream<String> result = CombineStreams.zip(first, second, (a, b) -> a + ", " + b);
-        List<String> expected = Arrays.asList("1, a", "2, b", "3, c");
-        assertEquals(expected, result.toList());
+        Stream<Integer> second = Stream.of(4, 5);
+
+        List<Integer> result = streamToList(CombineStreams.zip(first, second));
+
+        List<Integer> expected = Arrays.asList(1, 4, 2, 5);
+        assertEquals(expected, result);
     }
 
     @Test
-    void testZip_StreamsWithNullElements() {
-        Stream<Integer> first = Stream.of(1, null, 3);
-        Stream<String> second = Stream.of("a", "b", null);
-        Stream<String> result = CombineStreams.zip(first, second, (a, b) -> (a != null ? a.toString() : "null") + ", " + b);
-        List<String> expected = Arrays.asList("1, a", "null, b", "3, null");
-        assertEquals(expected, result.toList());
-    }
+    public void testZipWithStringTypes() {
+        Stream<String> first = Stream.of("a", "b", "c");
+        Stream<String> second = Stream.of("d", "e", "f");
 
-    @Test
-    void testZip_StreamsWithDifferentTypes() {
-        Stream<Integer> first = Stream.of(1, 2, 3);
-        Stream<Double> second = Stream.of(1.5, 2.5, 3.5);
-        Stream<String> result = CombineStreams.zip(first, second, (a, b) -> String.valueOf(a) + ", " + String.valueOf(b));
-        List<String> expected = Arrays.asList("1, 1.5", "2, 2.5", "3, 3.5");
-        assertEquals(expected, result.toList());
-    }
+        List<String> result = streamToList(CombineStreams.zip(first, second));
 
-    @Test
-    void testZip_CustomZipper() {
-        Stream<Integer> first = Stream.of(1, 2, 3);
-        Stream<String> second = Stream.of("a", "b", "c");
-        BiFunction<Integer, String, String> customZipper = (a, b) -> a.toString().repeat(a) + ", " + b;
-        Stream<String> result = CombineStreams.zip(first, second, customZipper);
-        List<String> expected = Arrays.asList("1, a", "22, b", "333, c");
-        assertEquals(expected, result.toList());
+        List<String> expected = Arrays.asList("a", "d", "b", "e", "c", "f");
+        assertEquals(expected, result);
     }
 }
