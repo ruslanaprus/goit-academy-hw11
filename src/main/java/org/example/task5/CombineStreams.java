@@ -4,11 +4,7 @@
 package org.example.task5;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * Utility class to combine two streams element-wise using a provided zipper function.
