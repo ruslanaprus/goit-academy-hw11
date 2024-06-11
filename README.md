@@ -92,14 +92,14 @@ The `CombineStreams` class provides utility methods for combining two streams el
 
 ### Methods
 
-`static <T, U, R> Stream<R> zip(Stream<T> first, Stream<U> second, BiFunction<T, U, R> zipper)`: Takes two streams and merges them element-wise into a single stream, stopping when one of the streams runs out of elements.
+`static <T> Stream<T> zip(Stream<T> first, Stream<T> second)`: Takes two streams and merges them element-wise into a single stream, stopping when one of the streams runs out of elements.
 
 
 ### Example Usage
 
 ```Java
-Stream<String> stream1 = Stream.of("a", "b", "c");
-Stream<Integer> stream2 = Stream.of(1, 2, 3);
-Stream<String> zippedStream = CombineStreams.zip(stream1, stream2, (s, i) -> s + i);
-// zippedStream: ["a, 1", "b, 2", "c, 3"]
+Stream<Integer> first = Stream.of(1, 2, 3);
+Stream<Integer> second = Stream.of(4, 5, 6, 7);
+List<Integer> zippedStream = CombineStreams.zip(first, second).toList();
+// zippedStream: [1, 4, 2, 5, 3, 6]
 ```
