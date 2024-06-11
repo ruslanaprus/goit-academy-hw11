@@ -6,6 +6,8 @@ package org.example.task5;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Utility class to combine two streams element-wise using a provided zipper function.
  */
@@ -28,16 +30,19 @@ public class CombineStreams {
      */
 
     public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
-        Iterator<T> iterator1 = first.iterator();
-        Iterator<T> iterator2 = second.iterator();
+        var firstIterator = first.iterator();
+        var secondIterator = second.iterator();
 
-        Stream.Builder<T> builder = Stream.builder();
-
-        while (iterator1.hasNext() && iterator2.hasNext()) {
-            builder.accept(iterator1.next());
-            builder.accept(iterator2.next());
-        }
-
-        return builder.build();
+        return Stream.generate(() -> {
+                    if (firstIterator.hasNext() && secondIterator.hasNext()) {
+                        T firstElement = firstIterator.next();
+                        T secondElement = secondIterator.next();
+                        return Stream.of(firstElement, secondElement);
+                    } else {
+                        return null;
+                    }
+                })
+                .takeWhile(pair -> pair != null)
+                .flatMap(pair -> pair);
     }
 }
